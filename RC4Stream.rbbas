@@ -47,13 +47,6 @@ Protected Class RC4Stream
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		 Shared Function RandomBytes(Count As Integer, Seed As MemoryBlock) As MemoryBlock
-		  Dim r As New RC4Stream(Seed)
-		  Return r.RandomBytes(Count) 
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
 		Sub Reset()
 		  For i As Int32 = 0 To 255
 		    Schedule(i) = i
