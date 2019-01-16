@@ -48,10 +48,12 @@ Protected Class RC4Stream
 
 	#tag Method, Flags = &h0
 		Sub Reset()
+		  ' initialize the Schedule array
 		  For i As Int32 = 0 To 255
 		    Schedule(i) = i
 		  Next
 		  
+		  ' scramble the Schedule with the key to get the initial state
 		  Dim j As UInt32
 		  For i As UInt32 = 0 To 255
 		    j = (j + Schedule(i) + mKey.Int8Value(i Mod mKey.Size)) Mod 256
@@ -61,6 +63,26 @@ Protected Class RC4Stream
 		  Next
 		End Sub
 	#tag EndMethod
+
+
+	#tag Note, Name = About this class
+		Copyright (c) 2019 Andrew Lambert, All Rights Reserved
+		Distributed under the MIT license.
+		
+		This class implements the RC4 stream cipher. RC4 is vulnerable to several forms of attack and generally
+		should not be used to secure important data. Use at your own risk.
+		
+		To encrypt and decrypt data use the Process() methods. The shared version of the method performs the
+		entire operation at once and returns the output. The instance version of the method can perform the 
+		operation as one or more separate calls, allowing streaming of long inputs.
+		
+		The RandomBytes() method returns the specified number of bytes from the RC4 key stream. The "Seed" parameter
+		is used as a key for the RC4 key stream algorithm, but instead of using the key to encrypt a message
+		the algorithm output itself is returned. As such, the bytes are not truly random: they are unpredictable
+		without knowing the seed. Due to this, and the weakness of RC4 generally, this class should not be used as
+		a cryptographically secure pseudo-random number generator.
+		
+	#tag EndNote
 
 
 	#tag Property, Flags = &h21
