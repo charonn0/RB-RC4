@@ -11,7 +11,7 @@ Protected Class RC4Stream
 	#tag Method, Flags = &h0
 		Function Process(Data As MemoryBlock) As MemoryBlock
 		  Dim k As MemoryBlock = Me.RandomBytes(Data.Size)
-		  Dim out As New MemoryBlock(0)
+		  Dim out As New MemoryBlock(Data.Size)
 		  Dim bs As New BinaryStream(out)
 		  For i As Integer = 0 To Data.Size - 1
 		    bs.WriteUInt8(Data.UInt8Value(i) Xor k.UInt8Value(i))
