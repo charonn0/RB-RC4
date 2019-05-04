@@ -42,14 +42,15 @@ Protected Class RC4Stream
 		    outstream.WriteUInt8(Schedule(k))
 		  Next
 		  outstream.Close
+		  mOffset = mOffset + out.Size
 		  Return out
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub Reset()
+		Sub Reset(DiscardLength As UInt64 = 0)
 		  ' initialize the Schedule array
-		  For i As Int32 = 0 To 255
+		  For i As UInt32 = 0 To 255
 		    Schedule(i) = i
 		  Next
 		  
@@ -57,10 +58,16 @@ Protected Class RC4Stream
 		  Dim j As UInt32
 		  For i As UInt32 = 0 To 255
 		    j = (j + Schedule(i) + mKey.Int8Value(i Mod mKey.Size)) Mod 256
-		    Dim tmp As Int32 = Schedule(i)
+		    Dim tmp As UInt32 = Schedule(i)
 		    Schedule(i) = Schedule(j)
 		    Schedule(j) = tmp
 		  Next
+		  
+		  mOffset = 0
+		  Do Until DiscardLength = 0
+		    Dim tmp As MemoryBlock = RandomBytes(Min(1024 * 1024 * 64, DiscardLength))
+		    DiscardLength = DiscardLength - tmp.Size
+		  Loop
 		End Sub
 	#tag EndMethod
 
@@ -90,15 +97,37 @@ Protected Class RC4Stream
 	#tag EndProperty
 
 	#tag Property, Flags = &h21
+		Private mOffset As UInt64
+	#tag EndProperty
+
+	#tag ComputedProperty, Flags = &h0
+		#tag Getter
+			Get
+			  return mOffset
+			End Get
+		#tag EndGetter
+		#tag Setter
+			Set
+			  If value < mOffset Then
+			    Me.Reset(value)
+			  ElseIf value > mOffset Then
+			    Call Me.RandomBytes(value - mOffset)
+			  End If
+			End Set
+		#tag EndSetter
+		Offset As UInt64
+	#tag EndComputedProperty
+
+	#tag Property, Flags = &h21
 		Private Schedule(255) As Int32
 	#tag EndProperty
 
 	#tag Property, Flags = &h21
-		Private StateI As Int32
+		Private StateI As UInt8
 	#tag EndProperty
 
 	#tag Property, Flags = &h21
-		Private StateJ As Int32
+		Private StateJ As UInt8
 	#tag EndProperty
 
 
