@@ -57,7 +57,7 @@ Protected Class RC4Stream
 		  ' scramble the Schedule with the key to get the initial state
 		  Dim j As UInt32
 		  For i As UInt32 = 0 To 255
-		    j = (j + Schedule(i) + mKey.Int8Value(i Mod mKey.Size)) Mod 256
+		    j = (j + Schedule(i) + mKey.UInt8Value(i Mod mKey.Size)) Mod 256
 		    Dim tmp As UInt32 = Schedule(i)
 		    Schedule(i) = Schedule(j)
 		    Schedule(j) = tmp
