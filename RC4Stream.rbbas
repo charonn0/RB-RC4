@@ -1,54 +1,10 @@
 #tag Class
 Protected Class RC4Stream
 	#tag Method, Flags = &h0
-		Sub Constructor(Key As MemoryBlock)
+		Sub Constructor(Key As MemoryBlock, DiscardLength As UInt64 = 0)
 		  If Key.Size > 256 Then Raise New RuntimeException
 		  mKey = Key
-		  Reset()
-		End Sub
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Function Process(Data As MemoryBlock) As MemoryBlock
-		  Dim k As MemoryBlock = Me.RandomBytes(Data.Size)
-		  Dim out As New MemoryBlock(Data.Size)
-		  Dim bs As New BinaryStream(out)
-		  For i As Integer = 0 To Data.Size - 1
-		    bs.WriteUInt8(Data.UInt8Value(i) Xor k.UInt8Value(i))
-		  Next
-		  bs.Close
-		  Return out
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		 Shared Function Process(Data As MemoryBlock, Key As MemoryBlock) As MemoryBlock
-		  Dim r As New RC4Stream(Key)
-		  Return r.Process(Data)
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Function RandomBytes(Count As Integer) As MemoryBlock
-		  Dim out As New MemoryBlock(0)
-		  Dim outstream As New BinaryStream(out)
-		  For x As UInt32 = 0 To Count - 1
-		    StateI = (StateI + 1) Mod 256
-		    StateJ = (StateJ + Schedule(StateI)) Mod 256
-		    Dim tmp As Int32 = Schedule(StateI)
-		    Schedule(StateI) = Schedule(StateJ)
-		    Schedule(StateJ) = tmp
-		    Dim k As UInt32 = (Schedule(StateI) + Schedule(StateJ)) Mod 256
-		    outstream.WriteUInt8(Schedule(k))
-		  Next
-		  outstream.Close
-		  mOffset = mOffset + out.Size
-		  Return out
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Sub Reset(DiscardLength As UInt64 = 0)
+		  
 		  ' initialize the Schedule array
 		  For i As UInt32 = 0 To 255
 		    Schedule(i) = i
@@ -75,24 +31,52 @@ Protected Class RC4Stream
 		End Sub
 	#tag EndMethod
 
+	#tag Method, Flags = &h0
+		Function Process(Data As MemoryBlock) As MemoryBlock
+		  Dim keystream As MemoryBlock = Me.RandomBytes(Data.Size)
+		  Dim output As New MemoryBlock(Data.Size)
+		  For i As Integer = 0 To Data.Size - 1
+		    output.UInt8Value(i) = Data.UInt8Value(i) Xor keystream.UInt8Value(i)
+		  Next
+		  Return output
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function RandomBytes(Count As Integer) As MemoryBlock
+		  ' Returns the specified number of bytes from the key stream. Since the keystream is unpredictable without knowing the
+		  ' key (or the seed in this case) it can be used as a pseudo-random number generator.
+		  
+		  Dim keystream As New MemoryBlock(Count)
+		  For i As UInt32 = 0 To Count - 1
+		    StateI = (StateI + 1) Mod 256
+		    StateJ = (StateJ + Schedule(StateI)) Mod 256
+		    Dim tmp As Int32 = Schedule(StateI)
+		    Schedule(StateI) = Schedule(StateJ)
+		    Schedule(StateJ) = tmp
+		    Dim k As UInt32 = (Schedule(StateI) + Schedule(StateJ)) Mod 256
+		    keystream.UInt8Value(i) = Schedule(k)
+		  Next
+		  mOffset = mOffset + keystream.Size
+		  Return keystream
+		End Function
+	#tag EndMethod
+
 
 	#tag Note, Name = About this class
 		Copyright (c) 2019 Andrew Lambert, All Rights Reserved
 		Distributed under the MIT license.
 		
 		This class implements the RC4 stream cipher. RC4 is vulnerable to several forms of attack and generally
-		should not be used to secure important data. Use at your own risk.
+		should not be used to secure important data. In particular there is no authentication provided. Use at
+		your own risk.
 		
-		To encrypt and decrypt data use the Process() methods. The shared version of the method performs the
-		entire operation at once and returns the output. The instance version of the method can perform the 
-		operation as one or more separate calls, allowing streaming of long inputs.
+		The RandomBytes() method returns the specified number of bytes from the RC4 key stream. 
 		
-		The RandomBytes() method returns the specified number of bytes from the RC4 key stream. The "Seed" parameter
-		is used as a key for the RC4 key stream algorithm, but instead of using the key to encrypt a message
-		the algorithm output itself is returned. As such, the bytes are not truly random: they are unpredictable
-		without knowing the seed. Due to this, and the weakness of RC4 generally, this class should not be used as
-		a cryptographically secure pseudo-random number generator.
+		The Process() method combines the cleartext with an equal number of bytes from the key stream, performing
+		both encryption and decryption.
 		
+		The Offset property gets and sets the position in the key stream.
 	#tag EndNote
 
 
@@ -113,7 +97,7 @@ Protected Class RC4Stream
 		#tag Setter
 			Set
 			  If value < mOffset Then
-			    Me.Reset(value)
+			    Me.Constructor(mKey, value)
 			  ElseIf value > mOffset Then
 			    Call Me.RandomBytes(value - mOffset)
 			  End If
