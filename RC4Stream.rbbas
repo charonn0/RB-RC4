@@ -54,6 +54,10 @@ Protected Class RC4Stream
 		    Schedule(i) = i
 		  Next
 		  
+		  ' reset the state
+		  StateI = 0
+		  StateJ = 0
+		  
 		  ' scramble the Schedule with the key to get the initial state
 		  Dim j As UInt32
 		  For i As UInt32 = 0 To 255
