@@ -11,6 +11,8 @@ Inherits Application
 
 	#tag Method, Flags = &h0
 		Sub RunTests()
+		  ' These tests use the RC4 test vectors from https://tools.ietf.org/html/rfc6229
+		  
 		  If Not Test40Bits() Then Break
 		  If Not Test56Bits() Then Break
 		  If Not Test64Bits() Then Break
@@ -28,8 +30,8 @@ Inherits Application
 		Private Function Test(Context As RC4Stream, TestVector As MemoryBlock) As Boolean
 		  For i As Integer = 0 To TestVector.Size - 1
 		    Dim rr As MemoryBlock = Context.RandomBytes(1)
-		    Dim template As Byte = TestVector.Byte(i)
-		    Dim response As Byte = rr.Byte(0)
+		    Dim template As Int8 = TestVector.Int8Value(i)
+		    Dim response As Int8 = rr.Int8Value(0)
 		    If template <> response Then
 		      Return False
 		    End If
@@ -53,28 +55,32 @@ Inherits Application
 		  Const offset3056 = "fabeb76028ade2d0e48722e46c4615a3c05d88abd50357f935a63c59ee537623"
 		  Const offset4080 = "ff38265c1642c1abe8d3c2fe5e572bf8a36a4c301ae8ac13610ccbc12256cacc"
 		  
+		  r.Offset = 3056
+		  If Not Test(r, DecodeHex(offset3056)) Then Return False
+		  
 		  r.Offset = 4080
 		  If Not Test(r, DecodeHex(offset4080)) Then Return False
-		  
-		  r.Offset = 2032
-		  If Not Test(r, DecodeHex(offset2032)) Then Return False
 		  
 		  r.Offset = 1520
 		  If Not Test(r, DecodeHex(offset1520)) Then Return False
 		  
+		  r.Offset = 2032
+		  If Not Test(r, DecodeHex(offset2032)) Then Return False
+		  
 		  r.Offset = 1008
 		  If Not Test(r, DecodeHex(offset1008)) Then Return False
 		  
-		  r.Offset = 752
-		  If Not Test(r, DecodeHex(offset752)) Then Return False
-		  
 		  r.Offset = 240
 		  If Not Test(r, DecodeHex(offset240)) Then Return False
+		  
+		  r.Offset = 752
+		  If Not Test(r, DecodeHex(offset752)) Then Return False
 		  
 		  r.Offset = 0
 		  If Not Test(r, DecodeHex(offset0)) Then Return False
 		  
 		  Return True
+		  
 		End Function
 	#tag EndMethod
 
@@ -92,23 +98,26 @@ Inherits Application
 		  Const offset3056 = "6866397e95c140534f94263421006e4032cb0a1e9542c6b3b8b398abc3b0f1d5"
 		  Const offset4080 = "29a0b8aed54a132324c62e423f54b4c83cb0f3b5020a98b82af9fe154484a168"
 		  
+		  r.Offset = 3056
+		  If Not Test(r, DecodeHex(offset3056)) Then Return False
+		  
 		  r.Offset = 4080
 		  If Not Test(r, DecodeHex(offset4080)) Then Return False
-		  
-		  r.Offset = 2032
-		  If Not Test(r, DecodeHex(offset2032)) Then Return False
 		  
 		  r.Offset = 1520
 		  If Not Test(r, DecodeHex(offset1520)) Then Return False
 		  
+		  r.Offset = 2032
+		  If Not Test(r, DecodeHex(offset2032)) Then Return False
+		  
 		  r.Offset = 1008
 		  If Not Test(r, DecodeHex(offset1008)) Then Return False
 		  
-		  r.Offset = 752
-		  If Not Test(r, DecodeHex(offset752)) Then Return False
-		  
 		  r.Offset = 240
 		  If Not Test(r, DecodeHex(offset240)) Then Return False
+		  
+		  r.Offset = 752
+		  If Not Test(r, DecodeHex(offset752)) Then Return False
 		  
 		  r.Offset = 0
 		  If Not Test(r, DecodeHex(offset0)) Then Return False
@@ -131,23 +140,26 @@ Inherits Application
 		  Const offset3056 = "8aed95ee5b0dcbfbef4eb21d3a3f52f9625a1ab00ee39a5327346bddb01a9c18"
 		  Const offset4080 = "a13a7c79c7e119b5ab0296ab28c300b9f3e4c0a2e02d1d01f7f0a74618af2b48"
 		  
+		  r.Offset = 3056
+		  If Not Test(r, DecodeHex(offset3056)) Then Return False
+		  
 		  r.Offset = 4080
 		  If Not Test(r, DecodeHex(offset4080)) Then Return False
-		  
-		  r.Offset = 2032
-		  If Not Test(r, DecodeHex(offset2032)) Then Return False
 		  
 		  r.Offset = 1520
 		  If Not Test(r, DecodeHex(offset1520)) Then Return False
 		  
+		  r.Offset = 2032
+		  If Not Test(r, DecodeHex(offset2032)) Then Return False
+		  
 		  r.Offset = 1008
 		  If Not Test(r, DecodeHex(offset1008)) Then Return False
 		  
-		  r.Offset = 752
-		  If Not Test(r, DecodeHex(offset752)) Then Return False
-		  
 		  r.Offset = 240
 		  If Not Test(r, DecodeHex(offset240)) Then Return False
+		  
+		  r.Offset = 752
+		  If Not Test(r, DecodeHex(offset752)) Then Return False
 		  
 		  r.Offset = 0
 		  If Not Test(r, DecodeHex(offset0)) Then Return False
@@ -171,29 +183,31 @@ Inherits Application
 		  Const offset4080 = "068326a2118416d21f9d04b2cd1ca050ff25b58995996707e51fbdf08b34d875"
 		  
 		  
+		  r.Offset = 3056
+		  If Not Test(r, DecodeHex(offset3056)) Then Return False
+		  
 		  r.Offset = 4080
 		  If Not Test(r, DecodeHex(offset4080)) Then Return False
-		  
-		  r.Offset = 2032
-		  If Not Test(r, DecodeHex(offset2032)) Then Return False
 		  
 		  r.Offset = 1520
 		  If Not Test(r, DecodeHex(offset1520)) Then Return False
 		  
+		  r.Offset = 2032
+		  If Not Test(r, DecodeHex(offset2032)) Then Return False
+		  
 		  r.Offset = 1008
 		  If Not Test(r, DecodeHex(offset1008)) Then Return False
 		  
-		  r.Offset = 752
-		  If Not Test(r, DecodeHex(offset752)) Then Return False
-		  
 		  r.Offset = 240
 		  If Not Test(r, DecodeHex(offset240)) Then Return False
+		  
+		  r.Offset = 752
+		  If Not Test(r, DecodeHex(offset752)) Then Return False
 		  
 		  r.Offset = 0
 		  If Not Test(r, DecodeHex(offset0)) Then Return False
 		  
 		  Return True
-		  
 		End Function
 	#tag EndMethod
 
@@ -212,32 +226,31 @@ Inherits Application
 		  Const offset4080 = "6349d126a37afcba89794f9804914fdcbf42c3018c2f7c66bfde524975768115"
 		  
 		  
-		  r.Offset = 4080
-		  If Not Test(r, DecodeHex(offset4080)) Then Return False
-		  
 		  r.Offset = 3056
 		  If Not Test(r, DecodeHex(offset3056)) Then Return False
 		  
-		  r.Offset = 2032
-		  If Not Test(r, DecodeHex(offset2032)) Then Return False
+		  r.Offset = 4080
+		  If Not Test(r, DecodeHex(offset4080)) Then Return False
 		  
 		  r.Offset = 1520
 		  If Not Test(r, DecodeHex(offset1520)) Then Return False
 		  
+		  r.Offset = 2032
+		  If Not Test(r, DecodeHex(offset2032)) Then Return False
+		  
 		  r.Offset = 1008
 		  If Not Test(r, DecodeHex(offset1008)) Then Return False
 		  
-		  r.Offset = 752
-		  If Not Test(r, DecodeHex(offset752)) Then Return False
-		  
 		  r.Offset = 240
 		  If Not Test(r, DecodeHex(offset240)) Then Return False
+		  
+		  r.Offset = 752
+		  If Not Test(r, DecodeHex(offset752)) Then Return False
 		  
 		  r.Offset = 0
 		  If Not Test(r, DecodeHex(offset0)) Then Return False
 		  
 		  Return True
-		  
 		End Function
 	#tag EndMethod
 
@@ -255,26 +268,26 @@ Inherits Application
 		  Const offset3056 = "adfd3868b8e51485d5e610017e3dd609ad26581c0c5be45f4cea01db2f3805d5"
 		  Const offset4080 = "f3172ceffc3b3d997c85ccd5af1a950ce74b0b9731227fd37c0ec08a47ddd8b8"
 		  
-		  r.Offset = 4080
-		  If Not Test(r, DecodeHex(offset4080)) Then Return False
-		  
 		  r.Offset = 3056
 		  If Not Test(r, DecodeHex(offset3056)) Then Return False
 		  
-		  r.Offset = 2032
-		  If Not Test(r, DecodeHex(offset2032)) Then Return False
+		  r.Offset = 4080
+		  If Not Test(r, DecodeHex(offset4080)) Then Return False
 		  
 		  r.Offset = 1520
 		  If Not Test(r, DecodeHex(offset1520)) Then Return False
 		  
+		  r.Offset = 2032
+		  If Not Test(r, DecodeHex(offset2032)) Then Return False
+		  
 		  r.Offset = 1008
 		  If Not Test(r, DecodeHex(offset1008)) Then Return False
 		  
-		  r.Offset = 752
-		  If Not Test(r, DecodeHex(offset752)) Then Return False
-		  
 		  r.Offset = 240
 		  If Not Test(r, DecodeHex(offset240)) Then Return False
+		  
+		  r.Offset = 752
+		  If Not Test(r, DecodeHex(offset752)) Then Return False
 		  
 		  r.Offset = 0
 		  If Not Test(r, DecodeHex(offset0)) Then Return False
@@ -297,26 +310,26 @@ Inherits Application
 		  Const offset3056 = "26b51ea37df8e1d6f76fc3b66a7429b3bc7683205d4f443dc1f29dda3315c87b"
 		  Const offset4080 = "d5fa5a3469d29aaaf83d23589db8c85b3fb46e2c8f0f068edce8cdcd7dfc5862"
 		  
-		  r.Offset = 4080
-		  If Not Test(r, DecodeHex(offset4080)) Then Return False
-		  
 		  r.Offset = 3056
 		  If Not Test(r, DecodeHex(offset3056)) Then Return False
 		  
-		  r.Offset = 2032
-		  If Not Test(r, DecodeHex(offset2032)) Then Return False
+		  r.Offset = 4080
+		  If Not Test(r, DecodeHex(offset4080)) Then Return False
 		  
 		  r.Offset = 1520
 		  If Not Test(r, DecodeHex(offset1520)) Then Return False
 		  
+		  r.Offset = 2032
+		  If Not Test(r, DecodeHex(offset2032)) Then Return False
+		  
 		  r.Offset = 1008
 		  If Not Test(r, DecodeHex(offset1008)) Then Return False
 		  
-		  r.Offset = 752
-		  If Not Test(r, DecodeHex(offset752)) Then Return False
-		  
 		  r.Offset = 240
 		  If Not Test(r, DecodeHex(offset240)) Then Return False
+		  
+		  r.Offset = 752
+		  If Not Test(r, DecodeHex(offset752)) Then Return False
 		  
 		  r.Offset = 0
 		  If Not Test(r, DecodeHex(offset0)) Then Return False
@@ -339,26 +352,26 @@ Inherits Application
 		  Const offset3056 = "552225ed1177f44584ac8cfa6c4eb5fc7e82cbabfc95381b080998442129c2f8"
 		  Const offset4080 = "1f135ed14ce60a91369d2322bef25e3c08b6be45124a43e2eb77953f84dc8553"
 		  
-		  r.Offset = 4080
-		  If Not Test(r, DecodeHex(offset4080)) Then Return False
-		  
 		  r.Offset = 3056
 		  If Not Test(r, DecodeHex(offset3056)) Then Return False
 		  
-		  r.Offset = 2032
-		  If Not Test(r, DecodeHex(offset2032)) Then Return False
+		  r.Offset = 4080
+		  If Not Test(r, DecodeHex(offset4080)) Then Return False
 		  
 		  r.Offset = 1520
 		  If Not Test(r, DecodeHex(offset1520)) Then Return False
 		  
+		  r.Offset = 2032
+		  If Not Test(r, DecodeHex(offset2032)) Then Return False
+		  
 		  r.Offset = 1008
 		  If Not Test(r, DecodeHex(offset1008)) Then Return False
 		  
-		  r.Offset = 752
-		  If Not Test(r, DecodeHex(offset752)) Then Return False
-		  
 		  r.Offset = 240
 		  If Not Test(r, DecodeHex(offset240)) Then Return False
+		  
+		  r.Offset = 752
+		  If Not Test(r, DecodeHex(offset752)) Then Return False
 		  
 		  r.Offset = 0
 		  If Not Test(r, DecodeHex(offset0)) Then Return False
