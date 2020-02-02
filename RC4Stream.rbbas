@@ -33,6 +33,9 @@ Protected Class RC4Stream
 
 	#tag Method, Flags = &h0
 		Function Process(Data As MemoryBlock) As MemoryBlock
+		  ' Combines the bytes of the Data with an equal number of bytes from
+		  ' the key stream, performing both encryption and decryption.
+		  
 		  Dim keystream As MemoryBlock = Me.RandomBytes(Data.Size)
 		  Dim output As New MemoryBlock(Data.Size)
 		  For i As Integer = 0 To Data.Size - 1
@@ -64,19 +67,25 @@ Protected Class RC4Stream
 
 
 	#tag Note, Name = About this class
-		Copyright (c) 2019 Andrew Lambert, All Rights Reserved
+		Copyright (c) 2019-20 Andrew Lambert, All Rights Reserved
 		Distributed under the MIT license.
+		https://github.com/charonn0/RB-RC4
 		
-		This class implements the RC4 stream cipher. RC4 is vulnerable to several forms of attack and generally
-		should not be used to secure important data. In particular there is no authentication provided. Use at
-		your own risk.
+		The RC4Stream class implements the RC4 stream cipher. RC4 is vulnerable to several forms of
+		attack and generally should not be used to secure important data. In particular there is no
+		authentication provided. Use at your own risk.
 		
-		The RandomBytes() method returns the specified number of bytes from the RC4 key stream. 
+		The RC4Stream.Constructor() initializes the key stream with the user's Key, optionally discarding
+		initial bytes from the key stream. Discarding the first several thousand bytes from the key
+		stream is strongly recommended to mitigate some of RC4's weaknesses.
 		
-		The Process() method combines the cleartext with an equal number of bytes from the key stream, performing
-		both encryption and decryption.
+		The RC4Stream.RandomBytes() method returns the specified number of bytes from the key stream.
 		
-		The Offset property gets and sets the position in the key stream.
+		The RC4Stream.Process() method combines the user-provided bytes with an equal number of bytes
+		from the key stream, performing both encryption and decryption.
+		
+		The RC4Stream.Offset property gets and sets the position in the key stream. This is useful for
+		both resetting the key stream and for discarding initial bytes from the key stream. 
 	#tag EndNote
 
 
