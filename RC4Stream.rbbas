@@ -37,11 +37,10 @@ Protected Class RC4Stream
 		  ' the key stream, performing both encryption and decryption.
 		  
 		  Dim keystream As MemoryBlock = Me.RandomBytes(Data.Size)
-		  Dim output As New MemoryBlock(Data.Size)
 		  For i As Integer = 0 To Data.Size - 1
-		    output.UInt8Value(i) = Data.UInt8Value(i) Xor keystream.UInt8Value(i)
+		    Data.UInt8Value(i) = Data.UInt8Value(i) Xor keystream.UInt8Value(i)
 		  Next
-		  Return output
+		  Return Data
 		End Function
 	#tag EndMethod
 
