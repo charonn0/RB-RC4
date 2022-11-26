@@ -12,7 +12,7 @@ The `RC4Stream.Offset` property gets and sets the position in the key stream.
 
 ## Example
 Encrypt and decrypt a message:
-```vbnet
+```realbasic
   Dim message As String = "Attack at dawn!"
   Dim key As String = "seekrit"
   Dim rc4 As New RC4Stream(key)
@@ -22,7 +22,7 @@ Encrypt and decrypt a message:
 ```
 
 Generate random bytes:
-```vbnet
+```realbasic
   Dim key As String = "seekrit"
   Dim rc4 As New RC4Stream(key)
   Dim rand As MemoryBlock = rc4.RandomBytes(64) ' generate 64 pseudo-random bytes
