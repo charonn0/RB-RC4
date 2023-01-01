@@ -66,7 +66,7 @@ Protected Class RC4Stream
 
 
 	#tag Note, Name = About this class
-		Copyright (c) 2019-20 Andrew Lambert, All Rights Reserved
+		Copyright (c) 2019-23 Andrew Lambert, All Rights Reserved
 		Distributed under the MIT license.
 		https://github.com/charonn0/RB-RC4
 		
